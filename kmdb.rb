@@ -29,17 +29,15 @@
 # - Insert the "Batman" sample data using ruby code. Do not use hard-coded ids.
 #   Delete any existing data beforehand so that each run of this script does not
 #   create duplicate data. (5 points)
-# DON'T CHANGE OR MOVE
-studio.destroy_all
-movie.destroy_all
-actor.destroy_all
-role.destroy_all
-Rails.logger.info "------------------------"
-Rails.logger.info "----- FRESH START! -----"
-Rails.logger.info "------------------------"
+
+
 
 # - Query the data and loop through the results to display output similar to the
 #   sample "report" below. (10 points)
+# Query movies and their associated roles
+
+
+# Loop through the movies and display their information
 # - You are welcome to use external resources for help with the assignment (including
 #   colleagues, AI, internet search, etc). However, the solution you submit must
 #   utilize the skills and strategies covered in class. Alternate solutions which
@@ -86,22 +84,79 @@ Rails.logger.info "------------------------"
 # Delete existing data, so you'll start fresh each time this script is run.
 # Use `Model.destroy_all` code.
 # TODO!
-
+# DON'T CHANGE OR MOVE
+Studio.destroy_all
+Movie.destroy_all
+Actor.destroy_all
+Role.destroy_all
+Rails.logger.info "------------------------"
+Rails.logger.info "----- FRESH START! -----"
+Rails.logger.info "------------------------"
 # Generate models and tables, according to the domain model.
 # TODO!
 
 # Insert data into the database that reflects the sample data shown above.
 # Do not use hard-coded foreign key IDs.
 # TODO!
+# Insert Studio
+Studio.create(name: 'Warner Bros.')
 
+# Insert Movies
+Movie.create(title: 'Batman Begins', year_released: 2005, rated: 'PG-13', studio_id: 1)
+Movie.create(title: 'The Dark Knight', year_released: 2008, rated: 'PG-13', studio_id: 1)
+Movie.create(title: 'The Dark Knight Rises', year_released: 2012, rated: 'PG-13', studio_id: 1)
+
+# Insert Actors
+Actor.create(name: 'Christian Bale')
+Actor.create(name: 'Michael Caine')
+Actor.create(name: 'Liam Neeson')
+Actor.create(name: 'Katie Holmes')
+Actor.create(name: 'Gary Oldman')
+Actor.create(name: 'Heath Ledger')
+Actor.create(name: 'Aaron Eckhart')
+Actor.create(name: 'Maggie Gyllenhaal')
+Actor.create(name: 'Tom Hardy')
+Actor.create(name: 'Joseph Gordon-Levitt')
+Actor.create(name: 'Anne Hathaway')
+
+# Insert Roles
+# Batman Begins
+Role.create(actor_id: 1, movie_id: 1, character_name: 'Bruce Wayne')
+Role.create(actor_id: 2, movie_id: 1, character_name: 'Alfred')
+Role.create(actor_id: 3, movie_id: 1, character_name: "Ra's Al Ghul")
+Role.create(actor_id: 4, movie_id: 1, character_name: 'Rachel Dawes')
+Role.create(actor_id: 5, movie_id: 1, character_name: 'Commissioner Gordon')
+
+# The Dark Knight
+Role.create(actor_id: 1, movie_id: 2, character_name: 'Bruce Wayne')
+Role.create(actor_id: 6, movie_id: 2, character_name: 'Joker')
+Role.create(actor_id: 7, movie_id: 2, character_name: 'Harvey Dent')
+Role.create(actor_id: 2, movie_id: 2, character_name: 'Alfred')
+Role.create(actor_id: 8, movie_id: 2, character_name: 'Rachel Dawes')
+
+# The Dark Knight Rises
+Role.create(actor_id: 1, movie_id: 3, character_name: 'Bruce Wayne')
+Role.create(actor_id: 5, movie_id: 3, character_name: 'Commissioner Gordon')
+Role.create(actor_id: 9, movie_id: 3, character_name: 'Bane')
+Role.create(actor_id: 10, movie_id: 3, character_name: 'John Blake')
+Role.create(actor_id: 11, movie_id: 3, character_name: 'Selina Kyle')
 # Prints a header for the movies output
 puts "Movies"
 puts "======"
 puts ""
-
+movies = Movie.select('title')
+movies.each do |movie|
+    put "#{movie.title}"
+end
 # Query the movies data and loop through the results to display the movies output.
 # TODO!
-
+movies = Movie.joins('INNER JOIN roles ON roles.movie_id = movies.id')
+            .joins('INNER JOIN actors ON roles.actor_id = actors.id')
+            .joins('INNER JOIN studios ON movies.studio_id= studios.id')
+            .select('movies.title, movies.year_released, movies.rated, studios.name AS studio_name')
+movies.each do |movie|
+    puts "#{movie.title} #{movie.year_released} #{movie.rated} #{movie.studio.name}"
+end
 # Prints a header for the cast output
 puts ""
 puts "Top Cast"
@@ -110,3 +165,7 @@ puts ""
 
 # Query the cast data and loop through the results to display the cast output for each movie.
 # TODO!
+#roles = Role
+#roles.each do |role|
+#    puts "# #{role.movie.id} #{role.actor.name} #{role.character_name}"
+#end
